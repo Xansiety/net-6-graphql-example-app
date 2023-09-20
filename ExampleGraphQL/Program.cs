@@ -1,5 +1,6 @@
 using ExampleGraphQL.Context;
 using ExampleGraphQL.GraphQL;
+using ExampleGraphQL.GraphQL.DataVideo;
 using GraphQL.Server.Ui.Voyager;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,10 @@ builder.Services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
 // Add GraphQL support
 builder.Services.AddGraphQLServer()
     .AddQueryType<Query>() // pass the instance of the Query class to the AddQueryType method
-    .AddProjections(); // to enable projections this enables the client to specify the fields that they want to receive from the server for example equivalent to include() in EF Core
+    .AddType<VideoType>() // enable documentation for the VideoType class
+    .AddProjections() // to enable projections this enables the client to specify the fields that they want to receive from the server for example equivalent to include() in EF Core
+    .AddFiltering() // enable filtering
+    .AddSorting(); // enable sorting
 
 var app = builder.Build();
 
@@ -38,7 +42,7 @@ if (app.Environment.IsDevelopment())
 
 // to enable new endpoints for GraphQL
 app.UseRouting();
- 
+
 app.UseAuthorization();
 
 // indicate to client that the API supports GraphQL inside of app.UseEndpoints()

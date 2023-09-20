@@ -1,5 +1,6 @@
 using ExampleGraphQL.Context;
 using ExampleGraphQL.GraphQL;
+using ExampleGraphQL.GraphQL.DataDirector;
 using ExampleGraphQL.GraphQL.DataVideo;
 using GraphQL.Server.Ui.Voyager;
 using Microsoft.EntityFrameworkCore;
@@ -23,10 +24,17 @@ builder.Services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
 });
 
 
+// types collection for GraphQL
+Type[] types =
+{
+    typeof(VideoType),
+    typeof(DirectorType),
+};  
+
 // Add GraphQL support
 builder.Services.AddGraphQLServer()
     .AddQueryType<Query>() // pass the instance of the Query class to the AddQueryType method
-    .AddType<VideoType>() // enable documentation for the VideoType class
+    .AddTypes(types) // enable documentation for the VideoType class
     .AddProjections() // to enable projections this enables the client to specify the fields that they want to receive from the server for example equivalent to include() in EF Core
     .AddMutationType<Mutation>() // pass the instance of the Mutation class to the AddMutationType method, to enable mutations(adding, updating, deleting)
     .AddFiltering() // enable filtering
